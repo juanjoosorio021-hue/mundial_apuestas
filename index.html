@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Scout Pro - Analítica avanzada para el Mundial 2026" />
+  <title>Mundial 2026 — Scout Pro</title>
+
+  <!-- Google Fonts: Barlow Condensed (cabeceras deportivas) + Inter (datos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER: Marca, reloj en vivo y selector de tema
+  ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+
+      <!-- Logo / Marca -->
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">⚽</span>
+        <div class="brand-text">
+          <span class="brand-title">Scout Pro</span>
+          <span class="brand-sub">Mundial 2026</span>
+        </div>
+      </div>
+
+      <!-- Reloj en tiempo real (actualizado por app.js) -->
+      <div class="header-clock" role="timer" aria-live="polite" aria-label="Hora actual">
+        <span id="clock-display">--:--:--</span>
+        <span class="clock-timezone">UTC-5</span>
+      </div>
+
+      <!-- Selector de tema claro/oscuro -->
+      <div class="theme-toggle-wrapper">
+        <label class="theme-toggle" for="theme-switch" aria-label="Cambiar tema de color">
+          <input type="checkbox" id="theme-switch" role="switch" aria-checked="false" />
+          <span class="toggle-track">
+            <span class="toggle-icon toggle-icon--dark" aria-hidden="true">🌙</span>
+            <span class="toggle-icon toggle-icon--light" aria-hidden="true">☀️</span>
+            <span class="toggle-thumb"></span>
+          </span>
+        </label>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================================
+       NAVEGACIÓN: Filtros de fase + grupos
+  ============================================================ -->
+  <nav class="phase-nav" role="navigation" aria-label="Filtrar partidos por fase">
+    <div class="nav-inner">
+
+      <!-- Filtro principal por fase -->
+      <div class="nav-filters" role="group" aria-label="Fase del torneo">
+        <button class="nav-btn active" data-filter="all" aria-pressed="true">
+          Todos
+        </button>
+        <button class="nav-btn" data-filter="eliminatoria" aria-pressed="false">
+          Eliminatoria
+        </button>
+
+        <!-- Selector desplegable para grupos A-L -->
+        <div class="group-selector-wrapper">
+          <label for="group-select" class="sr-only">Seleccionar grupo</label>
+          <select id="group-select" class="group-select" aria-label="Filtrar por grupo">
+            <option value="">Grupos (A–L)</option>
+            <option value="A">Grupo A</option>
+            <option value="B">Grupo B</option>
+            <option value="C">Grupo C</option>
+            <option value="D">Grupo D</option>
+            <option value="E">Grupo E</option>
+            <option value="F">Grupo F</option>
+            <option value="G">Grupo G</option>
+            <option value="H">Grupo H</option>
+            <option value="I">Grupo I</option>
+            <option value="J">Grupo J</option>
+            <option value="K">Grupo K</option>
+            <option value="L">Grupo L</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contador de resultados visibles -->
+      <div class="results-count" aria-live="polite">
+        <span id="match-count">0</span> partidos
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       LAYOUT PRINCIPAL: Grid de tarjetas + Panel lateral
+  ============================================================ -->
+  <div class="main-layout">
+
+    <!-- SECCIÓN PRINCIPAL: Tarjetas de partidos -->
+    <main class="main-content" id="main-content" role="main">
+
+      <!-- Estado: Cargando (Skeleton Loaders) -->
+      <section
+        id="loading-state"
+        class="loading-state"
+        aria-label="Cargando partidos"
+        aria-live="polite"
+      >
+        <!-- Los skeletons se generan dinámicamente en app.js -->
+        <div class="skeleton-card" aria-hidden="true"></div>
+        <div class="skeleton-card" aria-hidden="true"></div>
+        <div class="skeleton-card" aria-hidden="true"></div>
+        <div class="skeleton-card" aria-hidden="true"></div>
+        <div class="skeleton-card" aria-hidden="true"></div>
+        <div class="skeleton-card" aria-hidden="true"></div>
+      </section>
+
+      <!-- Estado: Sin resultados -->
+      <div id="empty-state" class="empty-state hidden" role="status">
+        <span class="empty-icon" aria-hidden="true">🔍</span>
+        <p class="empty-title">Sin partidos para este filtro</p>
+        <p class="empty-sub">Prueba seleccionando otro grupo o fase.</p>
+      </div>
+
+      <!-- Contenedor principal donde app.js inyecta las tarjetas -->
+      <section
+        id="matches-container"
+        class="matches-grid hidden"
+        aria-label="Listado de partidos"
+        aria-live="polite"
+        aria-relevant="additions removals"
+      >
+        <!-- Las tarjetas se inyectan aquí por renderMatchCard() en app.js -->
+      </section>
+
+    </main>
+
+    <!-- ASIDE: Panel lateral de noticias -->
+    <aside class="news-panel" id="news-feed" aria-label="Noticias y novedades de equipos">
+
+      <header class="panel-header">
+        <h2 class="panel-title">
+          <span class="live-dot" aria-hidden="true"></span>
+          Novedades
+        </h2>
+        <span class="panel-badge" aria-label="Noticias en vivo">EN VIVO</span>
+      </header>
+
+      <!-- Estado: cargando noticias -->
+      <div id="news-loading" class="news-skeleton-wrapper" aria-label="Cargando noticias">
+        <div class="skeleton-news" aria-hidden="true"></div>
+        <div class="skeleton-news" aria-hidden="true"></div>
+        <div class="skeleton-news" aria-hidden="true"></div>
+      </div>
+
+      <!-- Feed de noticias; app.js inyecta items aquí -->
+      <ul
+        id="news-list"
+        class="news-list hidden"
+        aria-live="polite"
+        aria-label="Listado de noticias"
+      >
+        <!-- Items generados por renderNewsItem() en app.js -->
+      </ul>
+
+    </aside>
+
+  </div><!-- /.main-layout -->
+
+  <!-- ============================================================
+       TOAST de notificaciones (para errores Firebase, etc.)
+  ============================================================ -->
+  <div
+    id="toast-container"
+    class="toast-container"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  ></div>
+
+  <!-- ============================================================
+       MÓDULO PRINCIPAL — ES6 type="module"
+  ============================================================ -->
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>

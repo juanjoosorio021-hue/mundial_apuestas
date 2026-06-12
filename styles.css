@@ -1,0 +1,1104 @@
+/* ================================================================
+   SCOUT PRO — Mundial 2026
+   Arquitectura: Mobile-First + CSS Custom Properties
+   Tipografía: Barlow Condensed (display) + Inter (datos)
+   Paleta: Terminal deportivo oscuro con acento verde neón apagado
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   1. RESET & BASE
+---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+img { max-width: 100%; display: block; }
+button { cursor: pointer; font-family: inherit; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+
+/* ----------------------------------------------------------------
+   2. CSS CUSTOM PROPERTIES — TEMA OSCURO (por defecto)
+---------------------------------------------------------------- */
+:root,
+[data-theme="dark"] {
+  /* Fondos */
+  --bg-base:          #0D0D0D;
+  --bg-surface:       #161616;
+  --bg-card:          #1A1A1A;
+  --bg-card-hover:    #202020;
+  --bg-input:         #242424;
+
+  /* Bordes */
+  --border-subtle:    rgba(255, 255, 255, 0.06);
+  --border-default:   rgba(255, 255, 255, 0.10);
+  --border-strong:    rgba(255, 255, 255, 0.18);
+
+  /* Textos */
+  --text-primary:     #F0F0F0;
+  --text-secondary:   #A0A0A0;
+  --text-muted:       #5C5C5C;
+  --text-inverse:     #0D0D0D;
+
+  /* Acento — verde neón apagado (firma visual del proyecto) */
+  --accent:           #00E676;
+  --accent-dim:       rgba(0, 230, 118, 0.15);
+  --accent-glow:      rgba(0, 230, 118, 0.30);
+
+  /* Semánticos */
+  --color-success:    #00E676;   /* 🟢 Alta confianza */
+  --color-warning:    #FFD600;   /* 🟡 Confianza media */
+  --color-danger:     #FF1744;   /* 🔴 Descartado */
+
+  --color-success-bg: rgba(0, 230, 118, 0.08);
+  --color-warning-bg: rgba(255, 214, 0, 0.08);
+  --color-danger-bg:  rgba(255, 23, 68, 0.08);
+
+  /* Header */
+  --header-bg:        rgba(13, 13, 13, 0.92);
+  --header-border:    rgba(255, 255, 255, 0.05);
+
+  /* Sombras */
+  --shadow-card:      0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-card-value: 0 0 0 1px var(--accent), 0 4px 20px var(--accent-glow);
+  --shadow-elevated:  0 8px 32px rgba(0, 0, 0, 0.6);
+
+  /* Radios */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+
+  /* Transiciones */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* ----------------------------------------------------------------
+   3. TEMA CLARO
+---------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg-base:          #F4F4F5;
+  --bg-surface:       #FFFFFF;
+  --bg-card:          #FFFFFF;
+  --bg-card-hover:    #F8F8F9;
+  --bg-input:         #EEEEEF;
+
+  --border-subtle:    rgba(0, 0, 0, 0.05);
+  --border-default:   rgba(0, 0, 0, 0.10);
+  --border-strong:    rgba(0, 0, 0, 0.18);
+
+  --text-primary:     #111111;
+  --text-secondary:   #555555;
+  --text-muted:       #999999;
+  --text-inverse:     #FFFFFF;
+
+  --accent:           #00C853;
+  --accent-dim:       rgba(0, 200, 83, 0.10);
+  --accent-glow:      rgba(0, 200, 83, 0.25);
+
+  --color-success:    #00A651;
+  --color-warning:    #D4A000;
+  --color-danger:     #CC0033;
+
+  --color-success-bg: rgba(0, 166, 81, 0.08);
+  --color-warning-bg: rgba(212, 160, 0, 0.08);
+  --color-danger-bg:  rgba(204, 0, 51, 0.08);
+
+  --header-bg:        rgba(244, 244, 245, 0.95);
+  --header-border:    rgba(0, 0, 0, 0.08);
+
+  --shadow-card:      0 1px 4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-card-value: 0 0 0 1.5px var(--accent), 0 4px 20px var(--accent-glow);
+  --shadow-elevated:  0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ----------------------------------------------------------------
+   4. UTILIDADES
+---------------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.hidden { display: none !important; }
+
+/* ----------------------------------------------------------------
+   5. HEADER
+---------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px 16px;
+}
+
+/* Marca */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.brand-icon {
+  font-size: 1.4rem;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.brand-sub {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Reloj */
+.header-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+
+#clock-display {
+  font-family: 'Barlow Condensed', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.clock-timezone {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Toggle de tema */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.theme-toggle input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  transition: background var(--transition-normal);
+  overflow: hidden;
+}
+
+.toggle-icon {
+  position: absolute;
+  font-size: 0.75rem;
+  transition: opacity var(--transition-fast);
+}
+
+.toggle-icon--dark { left: 6px; }
+.toggle-icon--light { right: 6px; }
+
+[data-theme="dark"]  .toggle-icon--light  { opacity: 0.3; }
+[data-theme="dark"]  .toggle-icon--dark   { opacity: 1; }
+[data-theme="light"] .toggle-icon--dark   { opacity: 0.3; }
+[data-theme="light"] .toggle-icon--light  { opacity: 1; }
+
+.toggle-thumb {
+  position: absolute;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: transform var(--transition-normal);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+#theme-switch:checked ~ .toggle-track .toggle-thumb {
+  transform: translateX(24px);
+}
+
+/* ----------------------------------------------------------------
+   6. NAVEGACIÓN DE FASES
+---------------------------------------------------------------- */
+.phase-nav {
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 57px;
+  z-index: 90;
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 16px;
+}
+
+.nav-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-btn[aria-pressed="true"] {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Selector de grupo */
+.group-select {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 28px 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.group-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Contador de resultados */
+.results-count {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+#match-count {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------------
+   7. LAYOUT PRINCIPAL (Mobile-First → Desktop)
+---------------------------------------------------------------- */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+  gap: 16px;
+}
+
+/* Tablet: 768px */
+@media (min-width: 768px) {
+  .main-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 20px 24px;
+    gap: 20px;
+  }
+}
+
+/* ----------------------------------------------------------------
+   8. CONTENIDO PRINCIPAL
+---------------------------------------------------------------- */
+.main-content {
+  flex: 1;
+  min-width: 0; /* Evita overflow en flex */
+}
+
+/* ----------------------------------------------------------------
+   9. GRID DE TARJETAS — Responsive
+---------------------------------------------------------------- */
+
+/* Mobile: 1 columna */
+.matches-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Tablet: 2 columnas */
+@media (min-width: 640px) {
+  .matches-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 columnas */
+@media (min-width: 1200px) {
+  .matches-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ----------------------------------------------------------------
+   10. TARJETA DE PARTIDO — Estructura base
+---------------------------------------------------------------- */
+.match-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.match-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* --- Tarjeta con apuesta de valor (firma visual: pulso verde) --- */
+.match-card.is-value-bet {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-card-value);
+}
+
+.match-card.is-value-bet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--accent-dim) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Animación de pulso para el borde de valor (reducida si prefers-reduced-motion) */
+@keyframes value-pulse {
+  0%, 100% { box-shadow: var(--shadow-card-value); }
+  50%       { box-shadow: 0 0 0 1px var(--accent), 0 4px 28px var(--accent-glow); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .match-card.is-value-bet {
+    animation: value-pulse 3s ease-in-out infinite;
+  }
+}
+
+/* ----------------------------------------------------------------
+   11. CABECERA DE LA TARJETA: Meta (Grupo / Fase) + Fecha
+---------------------------------------------------------------- */
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-phase {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+}
+
+.card-date {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------------
+   12. ENFRENTAMIENTO: Equipos + Marcador
+---------------------------------------------------------------- */
+.card-matchup {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-flag {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.team-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+.team--away .team-name { }
+
+/* Marcador / VS */
+.score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.score-main {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.score-vs {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.score-status {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.score-status.live {
+  background: rgba(255, 23, 68, 0.15);
+  color: var(--color-danger);
+  animation: blink 1.5s step-end infinite;
+}
+
+.score-status.finished  { background: var(--bg-input); color: var(--text-muted); }
+.score-status.scheduled { background: var(--accent-dim); color: var(--accent); }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ----------------------------------------------------------------
+   13. ESTADÍSTICAS CLAVE
+---------------------------------------------------------------- */
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px;
+}
+
+.stat-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+/* Barra de posesión (home vs away) */
+.possession-bar-wrapper {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+}
+
+.possession-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+.possession-bar {
+  height: 4px;
+  background: var(--border-default);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.possession-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+/* ----------------------------------------------------------------
+   14. RACHA DE ÚLTIMOS 5 PARTIDOS
+---------------------------------------------------------------- */
+.card-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.form-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.form-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.form-dot.W {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+}
+
+.form-dot.D {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+}
+
+.form-dot.L {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+
+/* ----------------------------------------------------------------
+   15. BLOQUE DE APUESTA DE VALOR
+---------------------------------------------------------------- */
+.card-value-bet {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.value-bet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.value-bet-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Badge de confiabilidad */
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.confidence-badge.strong {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+}
+
+.confidence-badge.moderate {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid rgba(255, 214, 0, 0.2);
+}
+
+.confidence-badge.discard {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid rgba(255, 23, 68, 0.2);
+}
+
+.value-bet-details {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vb-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.vb-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.vb-value {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.vb-ev-positive { color: var(--color-success); }
+.vb-ev-neutral  { color: var(--text-secondary); }
+.vb-ev-negative { color: var(--color-danger); }
+
+/* ----------------------------------------------------------------
+   16. SKELETON LOADERS
+---------------------------------------------------------------- */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+.skeleton-base {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-card {
+  height: 240px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-card-hover) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.6s infinite linear;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Grid de skeletons igual que el real */
+.loading-state {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .loading-state { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1200px) {
+  .loading-state { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ----------------------------------------------------------------
+   17. ESTADO VACÍO
+---------------------------------------------------------------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 10px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.empty-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------------
+   18. ASIDE — PANEL DE NOTICIAS
+---------------------------------------------------------------- */
+.news-panel {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex-shrink: 0;
+  /* Sticky en desktop */
+}
+
+@media (min-width: 768px) {
+  .news-panel {
+    width: 280px;
+    position: sticky;
+    top: 110px;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+    /* Scrollbar sutil */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-default) transparent;
+  }
+
+  .news-panel::-webkit-scrollbar { width: 4px; }
+  .news-panel::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+}
+
+@media (min-width: 1024px) {
+  .news-panel { width: 320px; }
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+/* Punto pulsante "en vivo" */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-danger);
+  border-radius: 50%;
+  animation: live-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.4); }
+  50%       { box-shadow: 0 0 0 5px rgba(255, 23, 68, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+}
+
+.panel-badge {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 23, 68, 0.12);
+  color: var(--color-danger);
+  border: 1px solid rgba(255, 23, 68, 0.2);
+}
+
+/* Lista de noticias */
+.news-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.news-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background var(--transition-fast);
+  cursor: default;
+}
+
+.news-item:hover {
+  background: var(--bg-card);
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-item-team {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.news-item-headline {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.news-item-time {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+/* Skeleton de noticias */
+.news-skeleton-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.skeleton-news {
+  height: 64px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-surface) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ----------------------------------------------------------------
+   19. TOAST NOTIFICATIONS
+---------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 340px;
+  width: calc(100% - 40px);
+}
+
+.toast {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-elevated);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: toast-in 0.25s ease;
+}
+
+.toast.error   { border-color: var(--color-danger); }
+.toast.success { border-color: var(--color-success); }
+.toast.warning { border-color: var(--color-warning); }
+
+.toast-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.toast-msg  { line-height: 1.45; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ----------------------------------------------------------------
+   20. FOCUS VISIBLE (Accesibilidad)
+---------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ----------------------------------------------------------------
+   21. AJUSTES DE TIPOGRAFÍA RESPONSIVOS
+---------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .team-name     { font-size: 1rem; max-width: 110px; }
+  .score-main    { font-size: 1.9rem; }
+  .brand-title   { font-size: 1.5rem; }
+}
