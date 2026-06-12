@@ -28,12 +28,13 @@ import { getFirestore, collection, onSnapshot, query, orderBy } from 'https://ww
 //     https://console.firebase.google.com → Configuración del proyecto
 // ============================================================
 const firebaseConfig = {
-  apiKey:            'TU_API_KEY',
-  authDomain:        'TU_PROYECTO.firebaseapp.com',
-  projectId:         'TU_PROYECTO_ID',
-  storageBucket:     'TU_PROYECTO.appspot.com',
-  messagingSenderId: 'TU_MESSAGING_SENDER_ID',
-  appId:             'TU_APP_ID',
+  apiKey: "AIzaSyBw4aBVVfhwQhPlzu1eg3UJLCt1dERkBcE",
+  authDomain: "apuestale-al-mundial.firebaseapp.com",
+  projectId: "apuestale-al-mundial",
+  storageBucket: "apuestale-al-mundial.firebasestorage.app",
+  messagingSenderId: "1006112947114",
+  appId: "1:1006112947114:web:1b4e85bffac9c340c889d3",
+  measurementId: "G-HBJS255ZR9"
 };
 
 // ============================================================
